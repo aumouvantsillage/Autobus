@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Autobus router demo</title>
+        <link rel="stylesheet" href="Autobus-demo.css">
+        <script src="Autobus-demo.opt.js"></script>
+        <script src="traceur-runtime.min.js"></script>
+        <script>
+            require("Autobus-demo");
+        </script>
+    </head>
+    <body>
+        <div>
+            Routing style:
+            <select name="style" id="style">
+                <option value="orthogonal">Orthogonal</option>
+                <option value="diagonal">Diagonal</option>
+            </select>
+       
+            Bus grouping:
+            <input type="checkbox" id="bus">
+            
+            Distance function:
+            <select name="distance" id="distance">
+                <option value="manhattanDistance">Manhattan</option>
+                <option value="diagonalDistance">Diagonal</option>
+            </select>
+            
+            Snap components to grid:
+            <input type="checkbox" id="snap" checked>
+       </div>
+       <svg></svg>
+    </body>
+</html>

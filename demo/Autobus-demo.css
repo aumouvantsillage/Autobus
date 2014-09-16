@@ -1,0 +1,20 @@
+div {
+    margin-bottom: 1em;
+}
+
+rect {
+    stroke: rgb(110, 128, 100);
+    stroke-width: 2;
+    fill: rgb(220, 255, 200);
+}
+
+polyline {
+    stroke-width: 2;
+    fill: none;
+}
+
+circle {
+    stroke: red;
+    stroke-width: 2;
+    fill: none;
+}

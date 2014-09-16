@@ -1,0 +1,9 @@
+{
+    "node": true,
+    "browser": true,
+    "loopfunc": true,
+    "undef": true,
+    "globals": {
+        "define": true
+    }
+}
