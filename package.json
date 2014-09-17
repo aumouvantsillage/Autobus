@@ -1,6 +1,6 @@
 {
-  "name": "Aster",
-  "version": "14.09.11",
+  "name": "Autobus",
+  "version": "1.0",
   "description": "A router for diagram rendering.",
   "author": "Guillaume Savaton",
   "devDependencies": {
