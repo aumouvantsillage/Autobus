@@ -230,12 +230,12 @@ window.addEventListener("load", function () {
      */
 
     function resize() {
-        var width = router.limitsRect.right - router.limitsRect.left;
-        var height = router.limitsRect.bottom - router.limitsRect.top;
+        var width = router.limits.right - router.limits.left;
+        var height = router.limits.bottom - router.limits.top;
 
         svg.setAttribute("width", width);
         svg.setAttribute("height", height);
-        svg.setAttribute("viewBox", router.limitsRect.left + " " + router.limitsRect.top + " " + width + " " + height);
+        svg.setAttribute("viewBox", router.limits.left + " " + router.limits.top + " " + width + " " + height);
     }
 
     function refreshRoutes() {
