@@ -22,7 +22,7 @@ window.addEventListener("load", function () {
         };
     }
 
-    var componentList = [
+    const componentList = [
         io(0, 25),
         io(0, 115),
         quad(280, 10),
@@ -31,7 +31,7 @@ window.addEventListener("load", function () {
         quad(510, 190)
     ];
 
-    var connectorList = [
+    const connectorList = [
         [0, 0, 2, 0],
         [0, 0, 4, 0],
         [1, 0, 3, 0],
@@ -45,7 +45,7 @@ window.addEventListener("load", function () {
      * Assign colors to each group.
      */
 
-    var groupColorList = [
+    const groupColorList = [
         "#a84300", // Light brown
         "#008ae6", // Light blue
         "#a89700", // Golden
@@ -65,24 +65,21 @@ window.addEventListener("load", function () {
      * Extract routing data from the circuit definition.
      */
 
-    var options = {
+    const options = {
         gridStep: 5,
-        bus: false,
-        diagonal: false,
-        distance: Autobus.manhattanDistance,
         continuous: false,
         snap: true
     };
 
-    var router = new Autobus.Router(options);
+    const router = new Autobus.Router(options);
 
-    var svgNs = "http://www.w3.org/2000/svg";
-    var svg = document.querySelector("svg");
+    const svgNs = "http://www.w3.org/2000/svg";
+    const svg = document.querySelector("svg");
 
     componentList.map(function (component) {
         router.addObstacle(component.rect);
 
-        var svgRect = document.createElementNS(svgNs, "rect");
+        const svgRect = document.createElementNS(svgNs, "rect");
         svgRect.setAttribute("x", component.rect.left);
         svgRect.setAttribute("y", component.rect.top);
         svgRect.setAttribute("width",  component.rect.right  - component.rect.left);
@@ -128,11 +125,11 @@ window.addEventListener("load", function () {
         function onMouseUp(evt) {
             if (evt.button === 0) {
                 if (options.snap) {
-                    var dx = component.rect.left % options.gridStep;
+                    let dx = component.rect.left % options.gridStep;
                     if (dx > options.gridStep / 2) {
                         dx -= options.gridStep;
                     }
-                    var dy = component.rect.top  % options.gridStep;
+                    let dy = component.rect.top  % options.gridStep;
                     if (dy > options.gridStep / 2) {
                         dy -= options.gridStep;
                     }
@@ -155,13 +152,13 @@ window.addEventListener("load", function () {
     }
 
     connectorList.forEach(function (connector) {
-        var svgPoly = document.createElementNS(svgNs, "polyline");
+        const svgPoly = document.createElementNS(svgNs, "polyline");
         svg.appendChild(svgPoly);
 
-        var startComponent = componentList[connector[0]];
-        var goalComponent  = componentList[connector[2]];
-        var startPort      = startComponent.ports[connector[1]];
-        var goalPort       = goalComponent.ports[connector[3]];
+        const startComponent = componentList[connector[0]];
+        const goalComponent  = componentList[connector[2]];
+        const startPort      = startComponent.ports[connector[1]];
+        const goalPort       = goalComponent.ports[connector[3]];
         router.addRoute(
             {
                 get x() { return startComponent.rect.left + startPort.dx; },
@@ -172,7 +169,7 @@ window.addEventListener("load", function () {
                 get y() { return goalComponent.rect.top  + goalPort.dy; }
             },
             function (route, pathData) {
-                var svgPolyPoints = "";
+                const svgPolyPoints = "";
                 pathData.forEach(function (point) {
                     svgPolyPoints += point.x + "," + point.y + " ";
                 });
@@ -182,10 +179,10 @@ window.addEventListener("load", function () {
         );
     });
 
-    var pointList = Array.prototype.concat.apply([],
+    const pointList = Array.prototype.concat.apply([],
         componentList.map(function (component) {
             return component.ports.map(function (port) {
-                var svgCircle = document.createElementNS(svgNs, "circle");
+                const svgCircle = document.createElementNS(svgNs, "circle");
                 svgCircle.setAttribute("r", 3);
                 svg.appendChild(svgCircle);
 
@@ -230,8 +227,8 @@ window.addEventListener("load", function () {
      */
 
     function resize() {
-        var width = router.limits.right - router.limits.left;
-        var height = router.limits.bottom - router.limits.top;
+        const width = router.limits.right - router.limits.left;
+        const height = router.limits.bottom - router.limits.top;
 
         svg.setAttribute("width", width);
         svg.setAttribute("height", height);
