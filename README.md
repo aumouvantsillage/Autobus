@@ -13,7 +13,7 @@ maybe due to the fact that we used the same pseudo-code from the Wikipedia artic
 However, the most recent version benefits from improvements that I found in Brian's version such as
 [the use of a binary heap](http://www.briangrinstead.com/blog/astar-search-algorithm-in-javascript-updated).
 
-The router is provided as an AMD module in ``js/Autobus.js``.
+The router is provided as an AMD module in ``lib/Autobus.js``.
 
 Building and running the demo
 -----------------------------
