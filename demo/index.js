@@ -1,7 +1,7 @@
 
 import * as Autobus from "../lib/Autobus.js";
 
-window.addEventListener("load", function () {
+window.addEventListener("load", () => {
 
     function io(x, y) {
         return {
@@ -22,7 +22,7 @@ window.addEventListener("load", function () {
         };
     }
 
-    const componentList = [
+    const components = [
         io(0, 25),
         io(0, 115),
         quad(280, 10),
@@ -31,7 +31,7 @@ window.addEventListener("load", function () {
         quad(510, 190)
     ];
 
-    const connectorList = [
+    const wires = [
         [0, 0, 2, 0],
         [0, 0, 4, 0],
         [1, 0, 3, 0],
@@ -45,7 +45,7 @@ window.addEventListener("load", function () {
      * Assign colors to each group.
      */
 
-    const groupColorList = [
+    const wireColors = [
         "#a84300", // Light brown
         "#008ae6", // Light blue
         "#a89700", // Golden
@@ -76,36 +76,36 @@ window.addEventListener("load", function () {
     const svgNs = "http://www.w3.org/2000/svg";
     const svg = document.querySelector("svg");
 
-    componentList.map(function (component) {
-        router.addObstacle(component.rect);
+    for (const c of components) {
+        router.addObstacle(c.rect);
 
         const svgRect = document.createElementNS(svgNs, "rect");
-        svgRect.setAttribute("x", component.rect.left);
-        svgRect.setAttribute("y", component.rect.top);
-        svgRect.setAttribute("width",  component.rect.right  - component.rect.left);
-        svgRect.setAttribute("height", component.rect.bottom - component.rect.top);
+        svgRect.setAttribute("x", c.rect.left);
+        svgRect.setAttribute("y", c.rect.top);
+        svgRect.setAttribute("width",  c.rect.right  - c.rect.left);
+        svgRect.setAttribute("height", c.rect.bottom - c.rect.top);
         svg.appendChild(svgRect);
 
-        svgRect.addEventListener("mousedown", function (evt) {
+        svgRect.addEventListener("mousedown", evt => {
             if (evt.button === 0) {
-                installDragAndDropHandlers(svgRect, component, evt.clientX, evt.clientY);
+                installDragAndDropHandlers(svgRect, c, evt.clientX, evt.clientY);
                 evt.stopPropagation();
                 evt.preventDefault();
             }
         });
-    });
+    }
 
-    function installDragAndDropHandlers(svgRect, component, dragX, dragY) {
+    function installDragAndDropHandlers(svgRect, c, dragX, dragY) {
         function moveComponent(dx, dy) {
-            component.rect.left   += dx;
-            component.rect.right  += dx;
-            component.rect.top    += dy;
-            component.rect.bottom += dy;
+            c.rect.left   += dx;
+            c.rect.right  += dx;
+            c.rect.top    += dy;
+            c.rect.bottom += dy;
 
-            svgRect.setAttribute("x", component.rect.left);
-            svgRect.setAttribute("y", component.rect.top);
+            svgRect.setAttribute("x", c.rect.left);
+            svgRect.setAttribute("y", c.rect.top);
 
-            router.extendLimits(component.rect);
+            router.extendLimits(c.rect);
             resize();
         }
 
@@ -125,11 +125,11 @@ window.addEventListener("load", function () {
         function onMouseUp(evt) {
             if (evt.button === 0) {
                 if (options.snap) {
-                    let dx = component.rect.left % options.gridStep;
+                    let dx = c.rect.left % options.gridStep;
                     if (dx > options.gridStep / 2) {
                         dx -= options.gridStep;
                     }
-                    let dy = component.rect.top  % options.gridStep;
+                    let dy = c.rect.top  % options.gridStep;
                     if (dy > options.gridStep / 2) {
                         dy -= options.gridStep;
                     }
@@ -151,75 +151,73 @@ window.addEventListener("load", function () {
         svg.addEventListener("mouseup", onMouseUp, false);
     }
 
-    connectorList.forEach(function (connector) {
+    for (const w of wires) {
         const svgPoly = document.createElementNS(svgNs, "polyline");
         svg.appendChild(svgPoly);
 
-        const startComponent = componentList[connector[0]];
-        const goalComponent  = componentList[connector[2]];
-        const startPort      = startComponent.ports[connector[1]];
-        const goalPort       = goalComponent.ports[connector[3]];
+        const ca = components[w[0]];
+        const cb = components[w[2]];
+        const pa = ca.ports[w[1]];
+        const pb = cb.ports[w[3]];
+
         router.addRoute(
             {
-                get x() { return startComponent.rect.left + startPort.dx; },
-                get y() { return startComponent.rect.top  + startPort.dy; }
+                get x() { return ca.rect.left + pa.dx; },
+                get y() { return ca.rect.top  + pa.dy; }
             },
             {
-                get x() { return goalComponent.rect.left + goalPort.dx; },
-                get y() { return goalComponent.rect.top  + goalPort.dy; }
+                get x() { return cb.rect.left + pb.dx; },
+                get y() { return cb.rect.top  + pb.dy; }
             },
-            function (route, pathData) {
-                const svgPolyPoints = "";
-                pathData.forEach(function (point) {
-                    svgPolyPoints += point.x + "," + point.y + " ";
-                });
+            (route, path) => {
+                const svgPolyPoints = path.reduce((acc, {x, y}) => acc + `${x},${y} `, "");
                 svgPoly.setAttribute("points", svgPolyPoints);
-                svgPoly.setAttribute("stroke", groupColorList[route.groupId % groupColorList.length]);
+                svgPoly.setAttribute("stroke", wireColors[route.groupId % wireColors.length]);
             }
         );
-    });
+    }
 
-    const pointList = Array.prototype.concat.apply([],
-        componentList.map(function (component) {
-            return component.ports.map(function (port) {
+    const points = components.map(
+        c => c.ports.map(
+            p => {
                 const svgCircle = document.createElementNS(svgNs, "circle");
                 svgCircle.setAttribute("r", 3);
                 svg.appendChild(svgCircle);
 
                 return {
-                    get x() { return component.rect.left + port.dx; },
-                    get y() { return component.rect.top  + port.dy; },
-                    onChange: function () {
+                    get x() { return c.rect.left + p.dx; },
+                    get y() { return c.rect.top  + p.dy; },
+                    onChange() {
                         svgCircle.setAttribute("cx", this.x);
                         svgCircle.setAttribute("cy", this.y);
                     }
                 };
-            });
-        })
-    );
+            }
+        )
+    ).flat();
 
     /*
      * Form handlers
      */
 
-    document.querySelector("#distance").addEventListener("change", function () {
-        router.options.distance = Autobus[this.value];
+    document.querySelector("#distance").addEventListener("change", evt => {
+        router.options.distance = Autobus[evt.target.value];
         router.route();
-    }, false);
+    });
 
-    document.querySelector("#style").addEventListener("change", function () {
-        router.options.diagonal = this.value === "diagonal";
+    document.querySelector("#style").addEventListener("change", evt => {
+        router.options.diagonal = evt.target.value === "diagonal";
         router.route();
-    }, false);
+    });
 
-    document.querySelector("#bus").addEventListener("change", function () {
-        router.options.bus = this.checked;
+    document.querySelector("#bus").addEventListener("change", evt => {
+        router.options.bus = evt.target.checked;
         router.route();
-    }, false);
+    });
 
-    document.querySelector("#snap").addEventListener("change", function () {
-        router.options.snap = this.checked;
-    }, false);
+    document.querySelector("#snap").addEventListener("change", evt => {
+        router.options.snap = evt.target.checked;
+    });
 
 
     /*
@@ -238,9 +236,9 @@ window.addEventListener("load", function () {
     function refreshRoutes() {
         router.route();
 
-        pointList.forEach(function (point) {
-            point.onChange();
-        });
+        for (const p of points) {
+            p.onChange();
+        }
     }
 
     /*
