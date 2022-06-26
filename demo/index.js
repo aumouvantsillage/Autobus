@@ -1,11 +1,19 @@
 
 import * as Autobus from "../lib/Autobus.js";
 
-// Make a component with a single port.
-function single(x, y) {
+// Make an input port.
+function input(x, y) {
     return {
         rect: Autobus.rect(x, y, x + 10, y + 10),
-        ports: [{dx: 5, dy: 5}]
+        ports: [{dx: 10, dy: 5}]
+    };
+}
+
+// Make an output port.
+function output(x, y) {
+    return {
+        rect: Autobus.rect(x, y, x + 10, y + 10),
+        ports: [{dx: 0, dy: 5}]
     };
 }
 
@@ -25,21 +33,25 @@ function quad(x, y) {
 // Populate the initial model.
 const model = {
     components: {
-        s1: single(10, 25),
-        s2: single(10, 115),
+        i1: input(10, 25),
+        i2: input(10, 115),
         q1: quad(280, 10),
         q2: quad(280, 100),
-        q3: quad(50, 190),
-        q4: quad(510, 190)
+        q3: quad(50, 240),
+        q4: quad(510, 190),
+        o1: output(590, 255),
+        o2: output(590, 205)
     },
     wires: [
-        ["s1", 0, "q1", 0],
-        ["s1", 0, "q3", 0],
-        ["s2", 0, "q2", 0],
-        ["s2", 0, "q4", 0],
+        ["i1", 0, "q1", 0],
+        ["i1", 0, "q3", 0],
+        ["i2", 0, "q2", 0],
+        ["i2", 0, "q4", 0],
         ["q1", 3, "q2", 2],
         ["q2", 3, "q3", 2],
-        ["q2", 3, "q4", 2]
+        ["q2", 3, "q4", 2],
+        ["q3", 1, "o1", 0],
+        ["q4", 1, "o2", 0]
     ]
 };
 
