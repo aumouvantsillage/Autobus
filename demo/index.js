@@ -189,7 +189,7 @@ function onMouseMove(evt) {
     dragState.y = evt.clientY;
 
     if (options.continuous) {
-        router.route();
+        router.update();
     }
 
     evt.stopPropagation();
@@ -205,7 +205,7 @@ function onMouseUp(evt) {
         dragState.view.snapToGrid();
     }
 
-    router.route();
+    router.update();
 
     dragState = null;
 
@@ -240,7 +240,7 @@ window.addEventListener("load", () => {
         router.options.bus      = bus.checked;
         options.snap            = snap.checked;
         if (reroute) {
-            router.route();
+            router.update();
         }
     }
 
@@ -251,5 +251,5 @@ window.addEventListener("load", () => {
 
     updateOptions();
     resize();
-    router.route();
+    router.update();
 });
