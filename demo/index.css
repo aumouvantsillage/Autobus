@@ -18,3 +18,7 @@ circle {
     stroke-width: 2;
     fill: none;
 }
+
+label {
+    margin-right: 1em;
+}

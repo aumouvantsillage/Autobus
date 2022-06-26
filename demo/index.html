@@ -8,23 +8,36 @@
     </head>
     <body>
         <div>
-            Routing style:
-            <select name="style" id="style">
-                <option value="orthogonal">Orthogonal</option>
-                <option value="diagonal">Diagonal</option>
-            </select>
+            <label>
+                Routing style:
+                <select name="style" id="style">
+                    <option value="orthogonal">Orthogonal</option>
+                    <option value="diagonal">Diagonal</option>
+                </select>
+            </label>
 
-            Bus grouping:
-            <input type="checkbox" id="bus">
+            <label>
+                Distance function:
+                <select name="distance" id="distance">
+                    <option value="manhattanDistance">Manhattan</option>
+                    <option value="diagonalDistance">Diagonal</option>
+                </select>
+            </label>
 
-            Distance function:
-            <select name="distance" id="distance">
-                <option value="manhattanDistance">Manhattan</option>
-                <option value="diagonalDistance">Diagonal</option>
-            </select>
+            <label>
+                Bus grouping:
+                <input type="checkbox" id="bus">
+            </label>
 
-            Snap components to grid:
-            <input type="checkbox" id="snap" checked>
+            <label>
+                Snap components to grid:
+                <input type="checkbox" id="snap" checked>
+            </label>
+
+            <label>
+                Continuous update:
+                <input type="checkbox" id="continuous">
+            </label>
        </div>
        <svg></svg>
     </body>

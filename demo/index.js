@@ -229,25 +229,28 @@ window.addEventListener("load", () => {
     document.documentElement.addEventListener("mousemove", onMouseMove);
     document.documentElement.addEventListener("mouseup",   onMouseUp);
 
-    const distance = document.querySelector("#distance");
-    const style    = document.querySelector("#style");
-    const bus      = document.querySelector("#bus");
-    const snap     = document.querySelector("#snap");
+    const distance   = document.querySelector("#distance");
+    const style      = document.querySelector("#style");
+    const bus        = document.querySelector("#bus");
+    const snap       = document.querySelector("#snap");
+    const continuous = document.querySelector("#continuous");
 
     function updateOptions(reroute) {
         router.options.distance = Autobus[distance.value];
         router.options.diagonal = style.value === "diagonal";
         router.options.bus      = bus.checked;
         options.snap            = snap.checked;
+        options.continuous      = continuous.checked;
         if (reroute) {
             router.update();
         }
     }
 
-    distance.addEventListener("change", () => updateOptions(true));
-    style.addEventListener("change",    () => updateOptions(true));
-    bus.addEventListener("change",      () => updateOptions(true));
-    snap.addEventListener("change",     () => updateOptions(false));
+    distance.addEventListener("change",   () => updateOptions(true));
+    style.addEventListener("change",      () => updateOptions(true));
+    bus.addEventListener("change",        () => updateOptions(true));
+    snap.addEventListener("change",       () => updateOptions(false));
+    continuous.addEventListener("change", () => updateOptions(false));
 
     updateOptions();
     resize();
