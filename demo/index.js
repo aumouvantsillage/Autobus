@@ -80,23 +80,10 @@ let dragState;
 class ComponentView {
     constructor(svg, c) {
         this.component = c;
-        this.outline = document.createElementNS(svgNS, "rect");
-        this.outline.setAttribute("x", c.rect.left);
-        this.outline.setAttribute("y", c.rect.top);
-        this.outline.setAttribute("width",  c.rect.right  - c.rect.left);
-        this.outline.setAttribute("height", c.rect.bottom - c.rect.top);
-        svg.appendChild(this.outline);
 
-        this.io = c.ports.map(p => {
-            const circle = document.createElementNS(svgNS, "circle");
-            circle.setAttribute("r", 3);
-            circle.setAttribute("cx", c.rect.left + p.dx);
-            circle.setAttribute("cy", c.rect.top  + p.dy);
-            svg.appendChild(circle);
-            return circle;
-        });
-
-        this.outline.addEventListener("mousedown", evt => {
+        const g = document.createElementNS(svgNS, "g");
+        svg.appendChild(g);
+        g.addEventListener("mousedown", evt => {
             if (evt.button === 0) {
                 dragState = {
                     view: this,
@@ -106,6 +93,22 @@ class ComponentView {
                 evt.stopPropagation();
                 evt.preventDefault();
             }
+        });
+
+        this.outline = document.createElementNS(svgNS, "rect");
+        this.outline.setAttribute("x", c.rect.left);
+        this.outline.setAttribute("y", c.rect.top);
+        this.outline.setAttribute("width",  c.rect.right  - c.rect.left);
+        this.outline.setAttribute("height", c.rect.bottom - c.rect.top);
+        g.appendChild(this.outline);
+
+        this.io = c.ports.map(p => {
+            const circle = document.createElementNS(svgNS, "circle");
+            circle.setAttribute("r", 3);
+            circle.setAttribute("cx", c.rect.left + p.dx);
+            circle.setAttribute("cy", c.rect.top  + p.dy);
+            g.appendChild(circle);
+            return circle;
         });
     }
 
@@ -146,10 +149,6 @@ class ComponentView {
 function populateView() {
     const svg = document.querySelector("svg");
 
-    for (const c of Object.values(model.components)) {
-        new ComponentView(svg, c);
-    }
-
     for (const w of model.wires) {
         const poly = document.createElementNS(svgNS, "polyline");
         svg.appendChild(poly);
@@ -173,6 +172,10 @@ function populateView() {
                 poly.setAttribute("stroke", wireColors[route.groupId % wireColors.length]);
             }
         );
+    }
+
+    for (const c of Object.values(model.components)) {
+        new ComponentView(svg, c);
     }
 }
 
