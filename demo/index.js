@@ -122,11 +122,11 @@ class ComponentView {
         this.outline.setAttribute("x", r.left);
         this.outline.setAttribute("y", r.top);
 
-        this.component.ports.forEach((p, i) => {
+        for (const [i, p] of this.component.ports.entries()) {
             const circle = this.io[i];
             circle.setAttribute("cx", r.left + p.dx);
             circle.setAttribute("cy", r.top  + p.dy);
-        });
+        }
 
         router.extendLimits(r);
         resize();
